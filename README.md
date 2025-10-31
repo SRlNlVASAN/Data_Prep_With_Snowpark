@@ -1,6 +1,6 @@
-# ❄️ Data Preparation with Snowpark: A Mini-Project
+# ❄️ Data Prep with Snowpark
 
-This mini-project provides **hands-on experience** with **Snowpark** to understand its use case and core implementation in data engineering workflows.
+By doing this hands-on task i understand the python dev's can do their data engineering workflows straight from their IDE's and can offload the heavy lifting to snowflake powerful cloud compute.
 
 ---
 
