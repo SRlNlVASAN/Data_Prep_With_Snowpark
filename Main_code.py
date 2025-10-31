@@ -2,12 +2,12 @@ from snowflake.snowpark import Session # to connect snowflake database
 from snowflake.snowpark.functions import * #this import all snowflake functions
 
 connn_param = { # this is the connection parameter
-    "account": "FBMATLC-QGB27387",
-    "user": "srinivasan",
-    "password": "123456789Snow@",
+    "account": "FBMA7",
+    "user": "xyz",
+    "password": "@",
     "role": "SYSADMIN",
     "warehouse": "compute_wh",
-    "database": "moviedb",
+    "database": "sales",
     "schema": "dim"
 }
 
