@@ -1,77 +1,55 @@
-# ❄️ Data Preparation with Snowpark: A Code-to-Data Mini-Project
+# ❄️ Data Preparation with Snowpark: A Mini-Project
 
-This mini-project is designed to provide hands-on experience with **Snowpark**, illustrating its core use case and implementation for modern data workflows.
+This mini-project provides **hands-on experience** with **Snowpark** to understand its use case and core implementation in data engineering workflows.
 
 ---
 
 ## 💡 Overview
 
-We will leverage the **Snowpark DataFrame API (Python)** to perform essential data preparation tasks—data cleaning and feature engineering—directly within the Snowflake Data Cloud.
+We will utilize the **Snowpark DataFrame API (Python)** to perform essential data preparation tasks directly on data within Snowflake.
 
-**The Goal:** To read raw customer sales data from a Snowflake table, apply a data quality filter, and calculate a new feature, **Total Revenue**, without requiring any separate compute cluster or data movement.
+**Goal:** To read customer sales data, apply necessary data cleaning (filter a column), and perform feature engineering (calculate a new attribute: **Total Revenue**).
 
 ---
 
-## 🛠️ Implementation Steps
+## 🛠️ Execution Steps
 
-The following steps outline the logic executed by the Snowpark Python client, with all heavy lifting pushed down to the Snowflake warehouse.
+These steps outline the process of building and running the data transformation pipeline using the Snowpark client.
 
-### 1. Connection and Session Setup
-The first step is establishing a secure connection to your Snowflake Data Warehouse.
-
-* **Import:** Start by importing the necessary `Session` object.
+1.  **Connect to Snowflake:** Start the project by importing the `Session` object to manage the connection from your IDE to the Snowflake Data Cloud.
     ```python
     from snowflake.snowpark import Session
     ```
-* **Configure:** Define your connection parameters (username, warehouse, database, etc.).
-* **Build Session:** Create the `session` instance. This object acts as the bridge to execute commands on Snowflake.
 
-### 2. Read Data into a Snowpark DataFrame
-Use the established session to load the target table (`SALES_DATA`) into a Snowpark DataFrame object.
+2.  **Define Connection Parameters:** Create a connection dictionary containing necessary credentials (username, password, warehouse, database, schema, etc.).
 
-* **Load Table:**
+3.  **Build the Session:** Construct the `session` variable. This instance is the conduit used to execute commands (which Snowpark translates into SQL queries) from your IDE to Snowflake.
+
+4.  **Read Data into DataFrame:** Use the `session` object to fetch the table data and load it into a **Snowpark DataFrame** (conceptually similar to a Spark DataFrame).
     ```python
-    sales_df = session.table("SALES_DATA")
-    ```
-    *Note: This operation is **lazy**—it defines the access but does not pull the data.*
-
-### 3. Data Transformation Pipeline
-
-We chain DataFrame operations using familiar Python constructs.
-
-* **Cleaning (Filter):** Filter out all invalid sales records where the `QUANTITY` is zero or negative.
-    ```python
-    from snowflake.snowpark.functions import col
-
-    # Filter for positive quantities
-    filtered_df = sales_df.filter(col("QUANTITY") > 0)
-    ```
-* **Feature Engineering (withColumn):** Create a new column, `TOTAL_REVENUE`, by multiplying `QUANTITY` and `UNIT_PRICE`.
-    ```python
-    # Calculate TOTAL_REVENUE
-    final_df = filtered_df.withColumn(
-        "TOTAL_REVENUE",
-        col("QUANTITY") * col("UNIT_PRICE")
-    )
+    # Example to load the SALES_DATA table
+    sales_df = session.table("SALES_DATA") 
     ```
 
-### 4. Final Output
+5.  **Data Cleaning:** Since we are working with sales data, the first cleaning step is to filter out invalid records. We use the DataFrame API methods `filter()` and `col()` to only retain positive quantities.
 
-Once an **action** (like `show()` or `saveAsTable()`) is called on the `final_df`, the entire optimized pipeline is executed by Snowflake, resulting in the curated data ready for BI or ML analysis.
+6.  **Transformation (Feature Engineering):** Create a new DataFrame using `withColumn()` to add the calculated attribute, **Total Revenue**, derived from the customer's quantity and unit price.
+
+7.  **Final Curated Data:** After all the cleaning and transformation operations are defined, the resulting curated data is ready to be consumed by downstream BI/AI analysis tools.
 
 ---
 
-## 🚀 The Snowpark Advantage: Code-to-Data Paradigm
+## 🚀 The Code-to-Data Advantage (Snowpark)
 
-The core benefit of Snowpark is that it allows developers to use rich programming languages like Python to perform database tasks **without moving the data**.
+The power of Snowpark lies in its execution model:
 
-> **"The Python code defining the transformations was not executed on your local computer; it was translated into highly optimized SQL and run by Snowflake's powerful, scalable compute engine."**
+> **"The Python code defining the data transformations was NOT executed on your local computer; it was translated into highly optimized SQL and run by Snowflake's powerful compute engine."**
 
-This principle empowers developers to take advantage of Snowflake's performance, scalability, and security to complete complex data engineering tasks.
+This allows developers to use familiar Python constructs (like DataFrames, filtering, and multiplying columns) to perform scalable data processing. Developers do not have to move data around, they can simply use Python to send the database tasks directly to Snowflake, taking advantage of its performance and governed environment.
 
-### Equivalent SQL Query
+### Equivalent SQL Query for this Task
 
-The entire Snowpark pipeline defined in the steps above is translated into the following efficient SQL statement for execution on the Snowflake Virtual Warehouse:
+The Snowpark pipeline translates into the following single, optimized SQL query executed by Snowflake:
 
 ```sql
 SELECT
